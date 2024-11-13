@@ -1,6 +1,5 @@
 Name: GitHub Diff
 Description: Gets the diff view of a pull request on GitHub
-Credential: github.com/g-linville/tools/github/credential@demo
 Param: repo_owner: the owner of the repo the pull request is in
 Param: repo_name: the name of the repo the pull request is in
 Param: pr_number: the number of the pull request
