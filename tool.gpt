@@ -1,0 +1,46 @@
+Name: GitHub Diff
+Description: Gets the diff view of a pull request on GitHub
+Credential: github.com/g-linville/tools/github/credential@demo
+Param: repo_owner: the owner of the repo the pull request is in
+Param: repo_name: the name of the repo the pull request is in
+Param: pr_number: the number of the pull request
+
+#!python3
+
+import http.client
+import json
+import base64
+import os
+
+owner = os.environ.get("REPO_OWNER")
+repo = os.environ.get("REPO_NAME")
+pull_number = os.environ.get("PR_NUMBER")
+token = os.environ.get("GITHUB_TOKEN")
+
+host = "api.github.com"
+path = f"/repos/{owner}/{repo}/pulls/{pull_number}"
+
+connection = http.client.HTTPSConnection(host)
+
+headers = {
+    "Accept": "application/vnd.github.v3.diff",
+    "User-Agent": "otto8",
+}
+
+if token:
+    headers["Authorization"] = f"token {token}"
+
+connection.request("GET", path, headers=headers)
+
+response = connection.getresponse()
+data = response.read()
+
+if response.status == 200:
+    diff_text = data.decode("utf-8")
+    print(diff_text)
+else:
+    print(f"Failed to fetch diff: {response.status}")
+    print(data.decode("utf-8"))
+
+connection.close()
+
